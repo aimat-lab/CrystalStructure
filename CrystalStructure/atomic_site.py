@@ -3,12 +3,10 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from typing import Union, Optional
-
 from pymatgen.core import Species, Element
 
 from holytools.abstract import Serializable
-
-from .atomic_constants import UnknownSite, Void, AtomicConstants
+from CrystalStructure.atomic_constants.atomic_constants import Void, UnknownSite, AtomicConstants
 
 ScatteringParams = tuple[float, float, float, float, float, float, float, float]
 #---------------------------------------------------------

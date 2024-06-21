@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, asdict
-from typing import Optional
+from typing import Optional, Literal
 
 import numpy as np
 from pymatgen.core import Structure, Lattice
@@ -10,11 +10,11 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.groups import SpaceGroup
 from holytools.abstract import JsonDataclass
 
-from .base import AtomicSite, CrystalBase
-from .lattice_params import Angles, Lengths
+from .atomic_site import AtomicSite
+from .base import CrystalBase
+from .lattice import Angles, Lengths
 
 CrystalSystem = Literal["cubic", "hexagonal", "monoclinic", "orthorhombic", "tetragonal", "triclinic", "trigonal"]
-
 # ---------------------------------------------------------
 
 @dataclass
@@ -131,7 +131,7 @@ class CrystalStructure(JsonDataclass):
     def as_str(self) -> str:
         the_dict = asdict(self)
         the_dict = {str(key) : str(value) for key, value in the_dict.items() if not isinstance(value, Structure)}
-        the_dict['base'] = f'{self.base[0]}, ...'
+        the_dict['atoms'] = f'{self.base[0]}, ...'
         return json.dumps(the_dict, indent='-')
 
     def __str__(self):

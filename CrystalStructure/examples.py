@@ -1,6 +1,6 @@
 import os
 
-from CrystalStructure.base.base import CrystalBase
+from CrystalStructure.base import CrystalBase
 from CrystalStructure.crystal import CrystalStructure
 
 cif1_fpath = os.path.join(os.path.dirname(__file__), 'cifs', "test1.cif")

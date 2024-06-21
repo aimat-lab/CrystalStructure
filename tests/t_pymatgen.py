@@ -5,12 +5,7 @@ from CrystalStructure.examples import LabelExamples
 
 class TestPymatgenSpacegroup(Unittest):
     def setUp(self):
-        with open(LabelExamples.get_cif_content(), 'r') as f:
-            cif1 = f.read()
-        with open(LabelExamples.get_cif_content(secondary=True), 'r') as f:
-            cif2 = f.read()
-
-        self.cifs : list[str] =  [cif1, cif2]
+        self.cifs : list[str] =  [LabelExamples.get_cif_content(), LabelExamples.get_cif_content(secondary=True)]
 
     def test_spacegroup_calculation(self):
         for cif in self.cifs:

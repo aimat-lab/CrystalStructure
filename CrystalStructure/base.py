@@ -5,10 +5,11 @@ from typing import Optional
 
 from holytools.abstract import Serializable
 
-from . import AtomicConstants
-from .atomic_constants import ElementSymbol
-from .atomic_site import AtomicSite
 import math
+
+from CrystalStructure.atomic_constants.atomic_constants import ElementSymbol, AtomicConstants
+from CrystalStructure.atomic_site import AtomicSite
+
 
 # ---------------------------------------------------------
 
