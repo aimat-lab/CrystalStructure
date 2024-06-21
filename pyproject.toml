@@ -5,7 +5,7 @@ authors = [{name = "Daniel Hollarek", email = "daniel.hollarek@googlemail.com"}]
 description = "A python implementation of a Crystal Structure based on pymatgen"
 readme = "readme.md"
 dynamic = ["dependencies"]
-#urls = { "repository" = "https://github.com/Somerandomguy10111/..." }
+urls = { "repository" = "https://github.com/aimat-lab/CrystalStructure" }
 
 
 [tool.setuptools.package-data]
