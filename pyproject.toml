@@ -1,11 +1,15 @@
 [project]
-name = "myproject"
+name = "CrystalStructure"
 version = "0.1.0"
 authors = [{name = "Daniel Hollarek", email = "daniel.hollarek@googlemail.com"}]
-description = "A very good project indeed"
+description = "A python implementation of a Crystal Structure based on pymatgen"
 readme = "readme.md"
 dynamic = ["dependencies"]
 #urls = { "repository" = "https://github.com/Somerandomguy10111/..." }
+
+
+[tool.setuptools.package-data]
+"CrystalStructure.cifs" = ["*"]
 
 [tool.setuptools.dynamic]
 dependencies = {file = ["requirements.txt"]}

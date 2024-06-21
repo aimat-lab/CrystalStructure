@@ -1,6 +1,6 @@
 from holytools.devtools import Unittest
-from xrdpattern.core import CrystalStructure
-from xrdpattern.examples import LabelExamples
+from CrystalStructure.crystal import CrystalStructure
+from CrystalStructure.examples import LabelExamples
 
 
 class TestPymatgenSpacegroup(Unittest):

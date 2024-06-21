@@ -4,9 +4,13 @@ from pymatgen.core import Species
 from pymatgen.core.structure import Structure
 
 from holytools.devtools import Unittest
-from xrdpattern.core import CrystalStructure
-from xrdpattern.core import Lengths, AtomicSite, CrystalBase, Angles, Void
-from xrdpattern.examples import LabelExamples
+
+from CrystalStructure.base.atomic_constants import Void
+from CrystalStructure.base.atomic_site import AtomicSite
+from CrystalStructure.base.base import CrystalBase
+from CrystalStructure.crystal import CrystalStructure
+from CrystalStructure.examples import LabelExamples
+from CrystalStructure.lattice.lattice_params import Lengths, Angles
 
 
 # ---------------------------------------------------------

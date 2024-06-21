@@ -4,11 +4,11 @@ import json
 from dataclasses import dataclass
 from typing import Union, Optional
 
-import torch
 from pymatgen.core import Species, Element
 
 from holytools.abstract import Serializable
-from xrdpattern.core import Void, UnknownSite, PhysicalConstants
+
+from .atomic_constants import UnknownSite, Void, AtomicConstants
 
 ScatteringParams = tuple[float, float, float, float, float, float, float, float]
 #---------------------------------------------------------
@@ -16,27 +16,20 @@ ScatteringParams = tuple[float, float, float, float, float, float, float, float]
 @dataclass
 class AtomicSite(Serializable):
     """x,y,z are the coordinates of the site given in the basis of the lattice"""
-    x: float
-    y: float
-    z: float
-    occupancy : float
+    x: Optional[float]
+    y: Optional[float]
+    z: Optional[float]
+    occupancy : Optional[float]
     species : Union[Element,Species, Void, UnknownSite]
     wyckoff_letter : Optional[str] = None
 
-    def __post_init__(self):
-        if self.is_nonstandard():
-           return
-
-        if not 0 <= self.occupancy <= 1:
-            raise ValueError('Occupancy must be between 0 and 1')
-
     @classmethod
     def make_void(cls) -> AtomicSite:
-        return cls(x=torch.nan, y=torch.nan, z=torch.nan, occupancy=0, species=Void())
+        return cls(x=None, y=None, z=None, occupancy=0, species=Void())
 
     @classmethod
     def make_placeholder(cls):
-        return cls(x=torch.nan, y=torch.nan, z=torch.nan, occupancy=torch.nan, species=UnknownSite())
+        return cls(x=None, y=None, z=None, occupancy=None, species=UnknownSite())
 
     def is_nonstandard(self) -> bool:
         if not isinstance(self.species, Species):
@@ -55,7 +48,7 @@ class AtomicSite(Serializable):
     # since pymatgen uses a different formula to compute the form factor
     def get_scattering_params(self) -> ScatteringParams:
         if isinstance(self.species, Species) or isinstance(self.species, Element):
-            values = PhysicalConstants.get_scattering_params(species=self.species)
+            values = AtomicConstants.get_scattering_params(species=self.species)
         elif isinstance(self.species, Void):
             values = (0, 0), (0, 0), (0, 0), (0, 0)
         elif isinstance(self.species, UnknownSite):

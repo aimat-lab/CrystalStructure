@@ -1,7 +1,7 @@
 from holytools.devtools import Unittest
 from pymatgen.core import Species
 
-from xrdpattern.examples import LabelExamples
+from CrystalStructure.examples import LabelExamples
 
 
 class TestCrystalBase(Unittest):

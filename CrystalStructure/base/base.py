@@ -4,7 +4,9 @@ import json
 from typing import Optional
 
 from holytools.abstract import Serializable
-from xrdpattern.core.constants import PhysicalConstants, ElementSymbol
+
+from . import AtomicConstants
+from .atomic_constants import ElementSymbol
 from .atomic_site import AtomicSite
 import math
 
@@ -22,8 +24,8 @@ class CrystalBase(Serializable):
         total_atomic_volume = 0
         for site in self.get_non_void_sites():
             element_symbol : ElementSymbol = site.species.element.symbol
-            covalent_radius  = PhysicalConstants.get_covalent(element_symbol=element_symbol)
-            vdw_radius = PhysicalConstants.get_vdw_radius(element_symbol=element_symbol)
+            covalent_radius  = AtomicConstants.get_covalent(element_symbol=element_symbol)
+            vdw_radius = AtomicConstants.get_vdw_radius(element_symbol=element_symbol)
 
             radius = (covalent_radius + vdw_radius) / 2
             atomic_volume = 4 / 3 * math.pi * radius ** 3

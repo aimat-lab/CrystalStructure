@@ -1,5 +1,7 @@
 import os
-from xrdpattern.core import PowderExperiment, CrystalStructure, CrystalBase, Artifacts, PowderSample
+
+from CrystalStructure.base.base import CrystalBase
+from CrystalStructure.crystal import CrystalStructure
 
 cif1_fpath = os.path.join(os.path.dirname(__file__), 'cifs', "test1.cif")
 cif2_fpath = os.path.join(os.path.dirname(__file__), 'cifs', 'test2.cif')
@@ -7,12 +9,6 @@ cif2_fpath = os.path.join(os.path.dirname(__file__), 'cifs', 'test2.cif')
 # ---------------------------------------------------------
 
 class LabelExamples:
-    @staticmethod
-    def get_label() -> PowderExperiment:
-        sample = PowderSample(crystal_structure=LabelExamples.get_crystal(mute=True), crystallite_size=500)
-        artifact = LabelExamples.get_artifacts()
-        powder_sample = PowderExperiment(powder=sample, artifacts=artifact, is_simulated=True)
-        return powder_sample
 
     @staticmethod
     def get_base(mute : bool = True) -> CrystalBase:
@@ -29,12 +25,6 @@ class LabelExamples:
         return crystal_structure
 
     @staticmethod
-    def get_artifacts() -> Artifacts:
-        artifacts = Artifacts(primary_wavelength=1.54056, secondary_wavelength=1.54439, secondary_to_primary=0.5)
-        return artifacts
-
-
-    @staticmethod
     def get_cif_content(secondary : bool = False) -> str:
         cif_fpath = cif1_fpath if not secondary else cif2_fpath
         with open(cif_fpath, 'r') as f:
@@ -42,6 +32,19 @@ class LabelExamples:
         return cif_content
 
 
-if __name__ == "__main__":
-    the_sample = LabelExamples.get_label()
-    the_sample.make_empty()
+
+    # @staticmethod
+    # def get_label() -> PowderExperiment:
+    #     sample = PowderSample(crystal_structure=LabelExamples.get_crystal(mute=True), crystallite_size=500)
+    #     artifact = LabelExamples.get_artifacts()
+    #     powder_sample = PowderExperiment(powder=sample, artifacts=artifact, is_simulated=True)
+    #     return powder_sample
+
+    # @staticmethod
+    # def get_artifacts() -> Artifacts:
+    #     artifacts = Artifacts(primary_wavelength=1.54056, secondary_wavelength=1.54439, secondary_to_primary=0.5)
+    #     return artifacts
+
+# if __name__ == "__main__":
+#     the_sample = LabelExamples.get_label()
+#     the_sample.make_empty()

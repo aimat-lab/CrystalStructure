@@ -10,9 +10,10 @@ from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.groups import SpaceGroup
 from holytools.abstract import JsonDataclass
 
-from .base import CrystalBase
-from .atomic_site import AtomicSite
+from .base import AtomicSite, CrystalBase
 from .lattice_params import Angles, Lengths
+
+CrystalSystem = Literal["cubic", "hexagonal", "monoclinic", "orthorhombic", "tetragonal", "triclinic", "trigonal"]
 
 # ---------------------------------------------------------
 
