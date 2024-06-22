@@ -5,12 +5,9 @@ from pymatgen.core.structure import Structure
 
 from holytools.devtools import Unittest
 
+from CrystalStructure import CrystalStructure, Lengths, Angles, CrystalBase, AtomicSite
 from CrystalStructure.atomic_constants.atomic_constants import Void
-from CrystalStructure.atomic_site import AtomicSite
-from CrystalStructure.base import CrystalBase
-from CrystalStructure.crystal import CrystalStructure
 from CrystalStructure.examples import CrystalExamples
-from CrystalStructure.lattice import Angles, Lengths
 
 
 # ---------------------------------------------------------
