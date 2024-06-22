@@ -1,11 +1,11 @@
 from holytools.devtools import Unittest
 from CrystalStructure.crystal import CrystalStructure
-from CrystalStructure.examples import LabelExamples
+from CrystalStructure.examples import CrystalExamples
 
 
 class TestPymatgenSpacegroup(Unittest):
     def setUp(self):
-        self.cifs : list[str] =  [LabelExamples.get_cif_content(), LabelExamples.get_cif_content(secondary=True)]
+        self.cifs : list[str] =  [CrystalExamples.get_cif_content(), CrystalExamples.get_cif_content(secondary=True)]
 
     def test_spacegroup_calculation(self):
         for cif in self.cifs:

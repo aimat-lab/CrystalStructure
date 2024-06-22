@@ -1,8 +1,6 @@
 import os
 
-
-from CrystalStructure.crystal import CrystalStructure
-from .base import CrystalBase
+from CrystalStructure.crystal import CrystalStructure, CrystalBase
 
 cif1_fpath = os.path.join(os.path.dirname(__file__), 'cifs', "test1.cif")
 cif2_fpath = os.path.join(os.path.dirname(__file__), 'cifs', 'test2.cif')
@@ -35,8 +33,8 @@ class CrystalExamples:
 
     # @staticmethod
     # def get_label() -> PowderExperiment:
-    #     sample = PowderSample(crystal_structure=LabelExamples.get_crystal(mute=True), crystallite_size=500)
-    #     artifact = LabelExamples.get_artifacts()
+    #     sample = PowderSample(crystal_structure=CrystalExamples.get_crystal(mute=True), crystallite_size=500)
+    #     artifact = CrystalExamples.get_artifacts()
     #     powder_sample = PowderExperiment(powder=sample, artifacts=artifact, is_simulated=True)
     #     return powder_sample
 
@@ -46,5 +44,5 @@ class CrystalExamples:
     #     return artifacts
 
 # if __name__ == "__main__":
-#     the_sample = LabelExamples.get_label()
+#     the_sample = CrystalExamples.get_label()
 #     the_sample.make_empty()

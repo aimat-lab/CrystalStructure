@@ -9,7 +9,7 @@ from CrystalStructure.atomic_constants.atomic_constants import Void
 from CrystalStructure.atomic_site import AtomicSite
 from CrystalStructure.base import CrystalBase
 from CrystalStructure.crystal import CrystalStructure
-from CrystalStructure.examples import LabelExamples
+from CrystalStructure.examples import CrystalExamples
 from CrystalStructure.lattice import Angles, Lengths
 
 
@@ -18,10 +18,10 @@ from CrystalStructure.lattice import Angles, Lengths
 class TestCifParsing(Unittest):
     @classmethod
     def setUpClass(cls):
-        cif_content = LabelExamples.get_cif_content(secondary=True)
+        cif_content = CrystalExamples.get_cif_content(secondary=True)
         print(f'Cif content from example: {cif_content}')
         cls.pymatgen_structure = Structure.from_str(input_string=cif_content, fmt='cif')
-        crystal = CrystalStructure.from_cif(cif_content=LabelExamples.get_cif_content(secondary=True))
+        crystal = CrystalStructure.from_cif(cif_content=CrystalExamples.get_cif_content(secondary=True))
         crystal.calculate_properties()
         cls.crystal = crystal
 
@@ -60,7 +60,7 @@ class TestCifParsing(Unittest):
 class TestPymatgenCompatibility(Unittest):
     @classmethod
     def setUpClass(cls):
-        pymatgen_structure = Structure.from_str(LabelExamples.get_cif_content(secondary=True), fmt='cif')
+        pymatgen_structure = Structure.from_str(CrystalExamples.get_cif_content(secondary=True), fmt='cif')
         cls.crystal = CrystalStructure.from_pymatgen(pymatgen_structure=pymatgen_structure)
         cls.pymatgen_structure = pymatgen_structure
 

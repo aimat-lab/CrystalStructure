@@ -1,12 +1,12 @@
 from holytools.devtools import Unittest
 from pymatgen.core import Species
 
-from CrystalStructure.examples import LabelExamples
+from CrystalStructure.examples import CrystalExamples
 
 
 class TestCrystalBase(Unittest):
     def test_scattering_params(self):
-        base = LabelExamples.get_base()
+        base = CrystalExamples.get_base()
         seen_species = set()
 
         for atomic_site in base:
@@ -20,7 +20,7 @@ class TestCrystalBase(Unittest):
 
 
     def test_site_dictionaries(self):
-        base = LabelExamples.get_base(mute=False)
+        base = CrystalExamples.get_base(mute=False)
         site_dictionaries = base.as_site_dictionaries()
 
         coordinates = list(site_dictionaries.keys())
