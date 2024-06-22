@@ -1,14 +1,13 @@
 from __future__ import annotations
 
+import math
 import json
 from typing import Optional
 
 from holytools.abstract import Serializable
 
-import math
-
-from CrystalStructure.atomic_constants.atomic_constants import ElementSymbol, AtomicConstants
-from CrystalStructure.atomic_site import AtomicSite
+from CrystalStructure.atomic_constants import ElementSymbol, AtomicConstants
+from .atomic_site import AtomicSite
 
 
 # ---------------------------------------------------------

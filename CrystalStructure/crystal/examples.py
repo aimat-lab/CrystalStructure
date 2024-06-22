@@ -1,23 +1,23 @@
 import os
 
-from CrystalStructure.base import CrystalBase
+
 from CrystalStructure.crystal import CrystalStructure
+from .base import CrystalBase
 
 cif1_fpath = os.path.join(os.path.dirname(__file__), 'cifs', "test1.cif")
 cif2_fpath = os.path.join(os.path.dirname(__file__), 'cifs', 'test2.cif')
 
 # ---------------------------------------------------------
 
-class LabelExamples:
-
+class CrystalExamples:
     @staticmethod
     def get_base(mute : bool = True) -> CrystalBase:
-        crystal_stucture = LabelExamples.get_crystal(mute=mute)
+        crystal_stucture = CrystalExamples.get_crystal(mute=mute)
         return crystal_stucture.base
 
     @staticmethod
     def get_crystal(mute : bool = False):
-        cif_content = LabelExamples.get_cif_content()
+        cif_content = CrystalExamples.get_cif_content()
         crystal_structure = CrystalStructure.from_cif(cif_content=cif_content)
         if not mute:
             print(f'--> Cif content:\n {open(cif1_fpath).read()}')
