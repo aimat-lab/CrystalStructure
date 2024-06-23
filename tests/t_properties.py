@@ -5,8 +5,8 @@ from holytools.devtools import Unittest
 from CrystalStructure.crystal import CrystalStructure, Lengths, Angles, CrystalBase, AtomicSite
 from CrystalStructure.atomic_constants.atomic_constants import Void
 
-
 # ---------------------------------------------------------
+
 
 class TestCrystalCalculations(Unittest):
     def setUp(self):
@@ -52,6 +52,7 @@ class TestCrystalCalculations(Unittest):
         else:
             symbol = site.species.element.symbol
         return symbol
+
 
 if __name__ == '__main__':
     TestCrystalCalculations.execute_all()

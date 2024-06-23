@@ -3,6 +3,7 @@ from pymatgen.core import Species
 
 from CrystalStructure.examples import CrystalExamples
 
+# ---------------------------------------------------------
 
 class TestCrystalBase(Unittest):
     def test_scattering_params(self):
