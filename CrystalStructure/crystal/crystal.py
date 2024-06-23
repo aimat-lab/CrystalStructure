@@ -5,7 +5,7 @@ from dataclasses import dataclass, asdict
 from typing import Optional, Literal
 
 import numpy as np
-from pymatgen.core import Structure, Lattice
+from pymatgen.core import Structure, Lattice, Site, Composition
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.groups import SpaceGroup
 from holytools.abstract import JsonDataclass
@@ -120,9 +120,29 @@ class CrystalStructure(JsonDataclass):
         lattice = Lattice.from_parameters(a, b, c, alpha, beta, gamma)
 
         non_void_sites = self.base.get_non_void_sites()
-        atoms = [site.atom_type for site in non_void_sites]
-        positions = [(site.x, site.y, site.z) for site in non_void_sites]
-        return Structure(lattice, atoms, positions)
+        
+        EPSILON = 0.001
+        clusters : list[list[AtomicSite]] = []
+        def matching_cluster(the_site):
+            for cl in clusters:
+                if euclidean_dist(cl[0], the_site) < EPSILON:
+                    return cl
+            return None
+
+        for site in non_void_sites:
+            match = matching_cluster(site)
+            if match:
+                match.append(site)
+            else:
+                clusters.append([site])
+
+        site_comps = []            
+        for clust in clusters:
+            comp = Composition({site.atom_type : site.occupancy for site in clust})
+            site_comps.append(comp)
+        
+        positions = [(c[0].x, c[0].y, c[0].z) for c in clusters]
+        return Structure(lattice=lattice, species=site_comps, coords=positions)
 
 
     # ---------------------------------------------------------
@@ -137,6 +157,10 @@ class CrystalStructure(JsonDataclass):
     def __str__(self):
         return self.as_str()
 
+
+def euclidean_dist(siteA : AtomicSite, siteB : AtomicSite):
+    return np.sqrt((siteA.x-siteB.x)**2 + (siteA.y-siteB.y)**2 + (siteA.z-siteB.z)**2)
+    
 
 def get_sorting_permutation(a, b, c):
     original = [a, b, c]

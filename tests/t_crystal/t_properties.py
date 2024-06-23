@@ -1,4 +1,8 @@
-import tests.t_crystal.crystaltest as BaseTest
+import math
+
+from pymatgen.core import Site
+
+import tests.t_crystal.crystal_test as BaseTest
 
 # ---------------------------------------------------------
 
@@ -50,6 +54,9 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
         for crystal, symbols_exp in zip(self.crystals, expected_symbols):
             self.assertEqual(crystal.wyckoff_symbols, symbols_exp)
 
+    @staticmethod
+    def euclidean_distance(site : Site):
+        return math.sqrt(site.x ** 2 + site.y ** 2 + site.z ** 2)
 
 
 if __name__ == '__main__':

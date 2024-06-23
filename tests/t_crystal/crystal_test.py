@@ -27,11 +27,6 @@ class CrystalTest(Unittest):
                 spg = int(spg)
         return spg
 
-    @staticmethod
-    def euclidean_distance(site):
-        return math.sqrt(site.x ** 2 + site.y ** 2 + site.z ** 2)
-
-
 
 if __name__ == "__main__":
     CrystalTest.execute_all()
