@@ -12,9 +12,9 @@ class TestCrystalStandardization(Unittest):
         primitives = Lengths(5, 3, 4)
         mock_angles = Angles(90, 90, 90)
         mock_base = CrystalBase([
-            AtomicSite(x=0.5, y=0.5, z=0.5, occupancy=1.0, species=Species("Si")),
-            AtomicSite(x=0.1, y=0.1, z=0.1, occupancy=1.0, species=Species("O")),
-            AtomicSite(x=0.9, y=0.9, z=0.9, occupancy=1.0, species=Void())
+            AtomicSite(x=0.5, y=0.5, z=0.5, occupancy=1.0, atom_type=Species("Si")),
+            AtomicSite(x=0.1, y=0.1, z=0.1, occupancy=1.0, atom_type=Species("O")),
+            AtomicSite(x=0.9, y=0.9, z=0.9, occupancy=1.0, atom_type=Void())
         ])
         crystal = CrystalStructure(lengths=primitives, angles=mock_angles, base=mock_base)
         crystal.calculate_properties()
@@ -47,10 +47,10 @@ class TestCrystalStandardization(Unittest):
 
     @staticmethod
     def get_site_symbol(site : AtomicSite):
-        if isinstance(site.species, Void):
+        if isinstance(site.atom_type, Void):
             symbol = Void.symbol
         else:
-            symbol = site.species.element.symbol
+            symbol = site.atom_type.element.symbol
         return symbol
 
 

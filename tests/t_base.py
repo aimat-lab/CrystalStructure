@@ -15,9 +15,9 @@ class TestCrystalBase(Unittest):
             self.assertEqual(len(params), 8)
             for p in params:
                 self.assertIsInstance(p, float)
-            if not atomic_site.species in seen_species:
-                print(f'Scattering params for species \"{atomic_site.species}\" a1, a2, a3, a4, b1, b2, b3, b4 = {params}')
-            seen_species.add(atomic_site.species)
+            if not atomic_site.atom_type in seen_species:
+                print(f'Scattering params for species \"{atomic_site.atom_type}\" a1, a2, a3, a4, b1, b2, b3, b4 = {params}')
+            seen_species.add(atomic_site.atom_type)
 
 
     def test_site_dictionaries(self):

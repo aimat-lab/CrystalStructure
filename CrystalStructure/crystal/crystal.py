@@ -59,7 +59,7 @@ class CrystalStructure(JsonDataclass):
         new_base = CrystalBase()
         for site in self.base:
             x,y,z = apply_permutation([site.x, site.y, site.z], sort_permutation)
-            new_site = AtomicSite(x=x, y=y, z=z, occupancy=site.occupancy, species=site.species)
+            new_site = AtomicSite(x=x, y=y, z=z, occupancy=site.occupancy, atom_type=site.atom_type)
             new_base.append(new_site)
 
 
@@ -102,7 +102,7 @@ class CrystalStructure(JsonDataclass):
             site_composition = site.species
             for species, occupancy in site_composition.items():
                 x,y,z = lattice.get_fractional_coords(site.coords)
-                atomic_site = AtomicSite(x,y,z, occupancy=occupancy, species=species)
+                atomic_site = AtomicSite(x, y, z, occupancy=occupancy, atom_type=species)
                 base.append(atomic_site)
 
         crystal_str = cls(lengths=Lengths(a=lattice.a, b=lattice.b, c=lattice.c),
@@ -120,7 +120,7 @@ class CrystalStructure(JsonDataclass):
         lattice = Lattice.from_parameters(a, b, c, alpha, beta, gamma)
 
         non_void_sites = self.base.get_non_void_sites()
-        atoms = [site.species for site in non_void_sites]
+        atoms = [site.atom_type for site in non_void_sites]
         positions = [(site.x, site.y, site.z) for site in non_void_sites]
         return Structure(lattice, atoms, positions)
 

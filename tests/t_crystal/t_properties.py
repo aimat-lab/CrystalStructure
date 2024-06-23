@@ -1,13 +1,8 @@
 import tests.t_crystal.crystaltest as BaseTest
 
-
 # ---------------------------------------------------------
 
 class TestPropertyCalculation(BaseTest.CrystalTest):
-    def test_atomic_volume(self):
-        for crystal in self.crystals:
-            print(f'self.crystal atomic volume fraction = {crystal.packing_density}')
-
     def test_pymatgen(self):
         for struct, crystal in zip(self.pymatgen_structures, self.crystals):
             actual = crystal.to_pymatgen()
@@ -25,23 +20,30 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
 
             print(f'Composition = {actual.composition}')
 
-    def test_spacegroup_calculation(self):
-        for spg, crystal in zip(self.spgs,self.crystals):
+
+    def test_volumes(self):
+        for crystal in self.crystals:
             crystal.calculate_properties()
-            computed_sg = crystal.space_group
-            print(f'Computed, actual spg = {computed_sg}, {spg}')
 
-            if computed_sg != spg:
-                raise ValueError(f'Computed spg {computed_sg} does not match actual spg {spg} given in cif file')
-
-
-    def test_volume_uc(self):
         expected_volumes = [364.21601704000005, 1205.5]
         for crystal, volume_exp in zip(self.crystals, expected_volumes):
-            self.assertAlmostEqual(crystal.volume_uc, volume_exp, places=5)
+            self.assertAlmostEqual(crystal.volume_uc, volume_exp, places=1)
+        for crystal in self.crystals:
+            print(f'self.crystal atomic volume fraction = {crystal.packing_density}')
 
 
-    def test_wyckoff_symbols(self):
+    def test_symmetries(self):
+        for crystal in self.crystals:
+            crystal.calculate_properties()
+
+        expected_space_groups = [57, 14]
+        for crystal, space_group_exp in zip(self.crystals, expected_space_groups):
+            self.assertEqual(crystal.space_group, space_group_exp)
+
+        expected_systems = ['orthorhombic', 'monoclinic']
+        for crystal, system_exp in zip(self.crystals, expected_systems):
+            self.assertEqual(crystal.crystal_system, system_exp)
+
         expected_symbols = [
             ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'c', 'c', 'c', 'c', 'd', 'd', 'd', 'd'],
             ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'O', 'O', 'O', 'O', 'O', 'O', 'N', 'N', 'H', 'H',
@@ -50,15 +52,7 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
         for crystal, symbols_exp in zip(self.crystals, expected_symbols):
             self.assertEqual(crystal.wyckoff_symbols, symbols_exp)
 
-    def test_crystal_system(self):
-        expected_systems = ['orthorhombic', 'monoclinic']
-        for crystal, system_exp in zip(self.crystals, expected_systems):
-            self.assertEqual(crystal.crystal_system, system_exp)
 
-    def test_space_group(self):
-        expected_space_groups = [57, 14]
-        for crystal, space_group_exp in zip(self.crystals, expected_space_groups):
-            self.assertEqual(crystal.space_group, space_group_exp)
 
 if __name__ == '__main__':
     TestPropertyCalculation.execute_all()

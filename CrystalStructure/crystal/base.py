@@ -23,7 +23,7 @@ class CrystalBase(Serializable):
     def calculate_atomic_volume(self) -> float:
         total_atomic_volume = 0
         for site in self.get_non_void_sites():
-            element_symbol : ElementSymbol = site.species.element.symbol
+            element_symbol : ElementSymbol = site.get_symbol()
             covalent_radius  = AtomicConstants.get_covalent(element_symbol=element_symbol)
             vdw_radius = AtomicConstants.get_vdw_radius(element_symbol=element_symbol)
 
@@ -42,7 +42,7 @@ class CrystalBase(Serializable):
             coords = (atom_site.x, atom_site.y, atom_site.z)
             if not coords in coordinate_map:
                 coordinate_map[coords] = {}
-            coordinate_map[coords][atom_site.species] = atom_site.occupancy
+            coordinate_map[coords][atom_site.atom_type] = atom_site.occupancy
 
         print(f'Coordinate map = {coordinate_map}')
         return coordinate_map
