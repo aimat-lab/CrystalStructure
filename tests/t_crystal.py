@@ -5,7 +5,7 @@ from pymatgen.core.structure import Structure
 
 from holytools.devtools import Unittest
 
-from CrystalStructure import CrystalStructure, Lengths, Angles, CrystalBase, AtomicSite
+from CrystalStructure.crystal import CrystalStructure, Lengths, Angles, CrystalBase, AtomicSite
 from CrystalStructure.atomic_constants.atomic_constants import Void
 from CrystalStructure.examples import CrystalExamples
 
@@ -127,6 +127,7 @@ class TestCrystalCalculations(Unittest):
         return symbol
 
 if __name__ == '__main__':
-    TestPymatgenCompatibility.execute_all()
-    TestCrystalCalculations.execute_all()
+    # TestPymatgenCompatibility.execute_all()
+    # TestCrystalCalculations.execute_all()
+    TestCifParsing.execute_all()
 
