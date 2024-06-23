@@ -1,15 +1,3 @@
-#------------------------------------------------------------------------------
-#$Date: 2023-05-05 05:46:21 +0300 (Fri, 05 May 2023) $
-#$Revision: 283357 $
-#$URL: file:///home/coder/svn-repositories/cod/cif/1/56/71/1567181.cif $
-#------------------------------------------------------------------------------
-#
-# This file is available in the Crystallography Open Database (COD),
-# http://www.crystallography.net/
-#
-# All data on this site have been placed in the public domain by the
-# contributors.
-#
 data_1567181
 loop_
 _publ_author_name

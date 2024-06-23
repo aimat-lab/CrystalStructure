@@ -21,19 +21,20 @@ class TestPymatgenStructure(Unittest):
         for spg, crystal in zip(self.spgs,self.crystal_structures):
             crystal.calculate_properties()
             computed_sg = crystal.space_group
-            print(f'Computed space group = {computed_sg}')
+            print(f'Computed, actual spg = {computed_sg}, {spg}')
 
             if computed_sg != spg:
                 raise ValueError(f'Computed spg {computed_sg} does not match actual spg {spg} given in cif files')
 
-
-    def test_to_pymatgen(self):
+    def test_to_pymatgen_faithfulness(self):
         for struct, crystal in zip(self.pymatgen_structures, self.crystal_structures):
             actual = crystal.to_pymatgen()
             expected = struct
 
-            self.assertEqual(len(actual.sites), len(expected.sites))
+            self.assertEqual(actual.lattice, expected.lattice)
+
             print(f'Actual sites = {actual.sites}; Expected sites = {expected.sites}')
+            self.assertEqual(len(actual.sites), len(expected.sites))
 
             actual_sites = sorted(actual.sites, key=self.euclidean_distance)
             expected_sites = sorted(expected.sites, key=self.euclidean_distance)
@@ -41,7 +42,6 @@ class TestPymatgenStructure(Unittest):
                 self.assertEqual(s1,s2)
 
             print(f'Composition = {actual.composition}')
-
 
     @staticmethod
     def extract_spg(cif : str) -> int:
@@ -51,9 +51,8 @@ class TestPymatgenStructure(Unittest):
             if '_space_group_IT_number' in line:
                 _, spg = line.split()
                 spg = int(spg)
-        print(f'Parsed spg number = {spg}')
+        # print(f'Parsed spg number = {spg}')
         return spg
-
 
 
     @staticmethod
