@@ -23,6 +23,16 @@ class TestCrystalStandardization(Unittest):
         self.mock_crystal = crystal
 
 
+    def test_scaling(self):
+        target_density = 0.5
+        self.mock_crystal.scale(target_density=target_density)
+        print(f'Packing density, target density = {self.mock_crystal.packing_density}, {target_density}')
+        print(f'Volume scaling = {self.mock_crystal.packing_density / target_density}')
+        print(f'New primitives = {self.mock_crystal.lengths.as_tuple()}')
+        print(f'New packing density = {self.mock_crystal.packing_density}')
+        self.assertEqual(round(self.mock_crystal.packing_density, 2), round(target_density, 2))
+
+
     def test_standardization(self):
         self.mock_crystal.standardize()
         expected_species_list = ['O', 'Si', Void.symbol]
@@ -42,3 +52,7 @@ class TestCrystalStandardization(Unittest):
         else:
             symbol = site.species.element.symbol
         return symbol
+
+
+if __name__ == "__main__":
+    TestCrystalStandardization.execute_all()
