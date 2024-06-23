@@ -25,7 +25,7 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
         for crystal in self.crystals:
             crystal.calculate_properties()
 
-        expected_volumes = [364.21601704000005, 1205.5]
+        expected_volumes = [364.21601704000005, 67.96]
         for crystal, volume_exp in zip(self.crystals, expected_volumes):
             self.assertAlmostEqual(crystal.volume_uc, volume_exp, places=1)
         for crystal in self.crystals:
@@ -39,17 +39,16 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
         for crystal, space_group_exp in zip(self.crystals, self.spgs):
             self.assertEqual(crystal.space_group, space_group_exp)
 
-        expected_systems = ['orthorhombic', 'monoclinic']
+        expected_systems = ['orthorhombic', 'trigonal']
         for crystal, system_exp in zip(self.crystals, expected_systems):
             self.assertEqual(crystal.crystal_system, system_exp)
-        #
-        # expected_symbols = [
-        #     ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'c', 'c', 'c', 'c', 'd', 'd', 'd', 'd'],
-        #     ['C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'O', 'O', 'O', 'O', 'O', 'O', 'N', 'N', 'H', 'H',
-        #      'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H', 'H']
-        # ]
-        # for crystal, symbols_exp in zip(self.crystals, expected_symbols):
-        #     self.assertEqual(crystal.wyckoff_symbols, symbols_exp)
+
+        expected_symbols = [
+            ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'c', 'c', 'c', 'c', 'd', 'd', 'd', 'd'],
+            ['a','a','a','b','b','b']
+        ]
+        for crystal, symbols_exp in zip(self.crystals, expected_symbols):
+            self.assertEqual(crystal.wyckoff_symbols, symbols_exp)
 
 
 
