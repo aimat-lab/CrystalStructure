@@ -49,7 +49,7 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
 
         expected_symbols = [
             ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'c', 'c', 'c', 'c', 'd', 'd', 'd', 'd'],
-            ['a','a','a','b','b','b']
+            ['a','a','b','b','b']
         ]
         for crystal, symbols_exp in zip(self.crystals, expected_symbols):
             self.assertEqual(crystal.wyckoff_symbols, symbols_exp)
