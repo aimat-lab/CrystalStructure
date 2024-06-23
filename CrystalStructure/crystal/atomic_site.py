@@ -23,7 +23,7 @@ class AtomicSite(Serializable):
 
     @classmethod
     def make_void(cls) -> AtomicSite:
-        return cls(x=None, y=None, z=None, occupancy=0, atom_type=Void())
+        return cls(x=None, y=None, z=None, occupancy=0.0, atom_type=Void())
 
     @classmethod
     def make_placeholder(cls):
@@ -60,7 +60,7 @@ class AtomicSite(Serializable):
         if isinstance(self.atom_type, Species) or isinstance(self.atom_type, Element):
             values = AtomicConstants.get_scattering_params(species=self.atom_type)
         elif isinstance(self.atom_type, Void):
-            values = (0, 0), (0, 0), (0, 0), (0, 0)
+            values = (0.0, 0.0), (0.0, 0.0), (0.0, 0.0), (0.0, 0.0)
         elif isinstance(self.atom_type, UnknownSite):
             fnan = float('nan')
             values = (fnan,fnan), (fnan,fnan), (fnan,fnan), (fnan,fnan)

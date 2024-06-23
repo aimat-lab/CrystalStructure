@@ -14,7 +14,7 @@ def load_constants_json(fname: str) -> dict:
     dirpath = os.path.dirname(__file__)
     fpath = os.path.join(dirpath, fname)
     with open(fpath) as file:
-        return json.load(file)
+        return json.load(file, parse_float=float, parse_int=float)
 
 # ---------------------------------------------------------
 
