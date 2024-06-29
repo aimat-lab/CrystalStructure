@@ -9,6 +9,16 @@ cif2_fpath = os.path.join(os.path.dirname(__file__), 'cifs', 'test2.cif')
 
 class CrystalExamples:
     @staticmethod
+    def get_crystal(secondary : bool, mute : bool = False):
+        cif_content = CrystalExamples.get_cif_content(secondary=secondary)
+        crystal_structure = CrystalStructure.from_cif(cif_content=cif_content)
+        if not mute:
+            print(f'--> Cif content:\n {open(cif1_fpath).read()}')
+            print(f'--> Crystal structure:\n {crystal_structure}')
+        return crystal_structure
+
+
+    @staticmethod
     def get_base(mute : bool = True) -> CrystalBase:
         crystal_stucture = CrystalExamples.get_crystal(mute=mute)
         return crystal_stucture.base

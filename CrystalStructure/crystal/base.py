@@ -76,7 +76,7 @@ class CrystalBase(Serializable):
             self.append(item)
         return self
 
-    def __iter__(self):
+    def __iter__(self) -> Iterable[AtomicSite]:
         return iter(self.atomic_sites)
 
     def __len__(self):
