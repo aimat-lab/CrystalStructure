@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from typing import Union, Optional
-from pymatgen.core import Species, Element, DummySpecies
+from typing import Optional
 
 from holytools.abstract import Serializable
+from pymatgen.core import Species, DummySpecies
 from pymatgen.util.typing import SpeciesLike
 
 from CrystalStructure.atomic_constants.atomic_constants import AtomicConstants
@@ -30,7 +30,7 @@ class AtomicSite(Serializable):
     wyckoff_letter : Optional[str] = None
 
     def __post_init__(self):
-        self.atom_type = AtomType(symbol=self.species_symbol)
+        self.atom_type : AtomType = AtomType(symbol=self.species_symbol)
 
     @classmethod
     def make_void(cls) -> AtomicSite:
@@ -47,9 +47,6 @@ class AtomicSite(Serializable):
 
     # ---------------------------------------------------------
     # properties
-
-    def get_symbol(self) -> str:
-        return self.atom_type.get_symbol()
 
     def as_list(self) -> list[float]:
         site_arr = [*self.get_scattering_params(), self.x, self.y, self.z, self.occupancy]
@@ -87,14 +84,14 @@ class AtomType:
 
     def __init__(self, symbol : str):
         if symbol == self.void_symbol:
-            self.species_like : SpeciesLike = DummySpecies(symbol=self.void_symbol)
+            self.specifier : SpeciesLike = DummySpecies(symbol=self.void_symbol)
         if symbol == self.placeholder_symbol:
-            self.species_like : SpeciesLike = DummySpecies(symbol=self.placeholder_symbol)
+            self.specifier : SpeciesLike = DummySpecies(symbol=self.placeholder_symbol)
         else:
-            self.species_like : SpeciesLike = Species.from_str(species_string=symbol)
+            self.specifier : SpeciesLike = Species.from_str(species_string=symbol)
 
     def get_symbol(self):
-        return str(self.species_like)
+        return str(self.specifier)
 
     @property
     def scattering_params(self) -> ScatteringParams:
@@ -106,7 +103,7 @@ class AtomType:
         else:
             # TODO: This casting only currently exists beacuse the scattering param table only has values for (unoxidized) elements, not ions
             # TODO: Normally would simply be species_symbol=str(self.species_like)
-            species_symbol = self.species_like.element.symbol
+            species_symbol = self.specifier.element.symbol
             values = AtomicConstants.get_scattering_params(species_symbol=species_symbol)
 
         (a1, b1), (a2, b2), (a3, b3), (a4, b4) = values

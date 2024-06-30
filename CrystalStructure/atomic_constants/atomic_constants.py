@@ -1,8 +1,5 @@
 import json
 import os.path
-from typing import Union
-
-from pymatgen.core import Species, Element
 
 SCATTERING_PARAMS_FILENAME = 'atomic_scattering_params.json'
 COVALENT_RADI_FILENAME = 'covalent_radius.json'
