@@ -35,7 +35,7 @@ class TestCrystalStandardization(Unittest):
     def test_standardization(self):
         self.mock_crystal.standardize()
         expected_species_list = ['O', 'Si', AtomType.void_symbol]
-        acrual_species_list = [site.species_symbol for site in self.mock_crystal.base]
+        acrual_species_list = [site.species_symbol1 for site in self.mock_crystal.base]
         self.assertEqual(acrual_species_list, expected_species_list)
 
         actual_primitives = self.mock_crystal.lengths.as_tuple()

@@ -32,6 +32,14 @@ class AtomicSite(Serializable):
     def __post_init__(self):
         self.atom_type : AtomType = AtomType(symbol=self.species_symbol)
 
+    @property
+    def pymatgen_species(self) -> SpeciesLike:
+        return self.atom_type.specifier
+
+    @property
+    def element_symbol(self) -> str:
+        return self.pymatgen_species.element.symbol
+
     @classmethod
     def make_void(cls) -> AtomicSite:
         return cls(x=None, y=None, z=None, occupancy=0.0, species_symbol=AtomType.void_symbol)

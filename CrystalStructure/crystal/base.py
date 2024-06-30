@@ -23,7 +23,7 @@ class CrystalBase(Serializable):
     def calculate_atomic_volume(self) -> float:
         total_atomic_volume = 0
         for site in self.get_non_void_sites():
-            element_symbol : str = site.species_symbol
+            element_symbol : str = site.element_symbol
             covalent_radius  = AtomicConstants.get_covalent(element_symbol=element_symbol)
             vdw_radius = AtomicConstants.get_vdw_radius(element_symbol=element_symbol)
 

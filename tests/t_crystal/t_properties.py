@@ -1,7 +1,8 @@
 import math
+from typing import Union
 
 import numpy as np
-from pymatgen.core import Lattice, Structure, Composition, PeriodicSite
+from pymatgen.core import Lattice, Structure, Composition, PeriodicSite, Site, Species, Element
 
 import tests.t_crystal.crystal_test as BaseTest
 from CrystalStructure.crystal import AtomicSite, CrystalStructure
@@ -14,16 +15,14 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
         for struct, crystal in zip(self.pymatgen_structures, self.crystals):
             actual = self.to_clustered_pymatgen(crystal)
             expected = struct
-
             self.assertEqual(actual.lattice, expected.lattice)
 
-            print(f'Actual sites = {actual.sites}; Expected sites = {expected.sites}')
             self.assertEqual(len(actual.sites), len(expected.sites))
-
             actual_sites = sorted(actual.sites, key=dist_from_origin)
             expected_sites = sorted(expected.sites, key=dist_from_origin)
+            print(f'Expected, actual sites = {expected_sites}, {actual_sites}')
             for s1,s2 in zip(actual_sites, expected_sites):
-                self.assertEqual(s1,s2)
+                self.check_sites_equal(s1,s2)
 
             print(f'Composition = {actual.composition}')
 
@@ -59,6 +58,26 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
 
     # ---------------------------------------------------------
 
+    def check_sites_equal(self, s1 : Site, s2 : Site):
+        s1, s2 = self.standardize_site(s1), self.standardize_site(s2)
+        self.assertEqual(s1, s2)
+
+    @staticmethod
+    def standardize_site(site : Site):
+        def cast_to_species(x : Union[Species, Element]):
+            if isinstance(x, Element):
+                x = Species(symbol=str(x), oxidation_state=0)
+            return x
+
+        if isinstance(site.species, Composition):
+            comp = site.species
+            species = Composition({cast_to_species(x) : occ for x, occ in comp.items()})
+            site = Site(species=species, coords=site.coords)
+
+        return site
+
+
+
     @staticmethod
     def to_clustered_pymatgen(crystal : CrystalStructure) -> Structure:
         a, b, c = crystal.lengths.as_tuple()
@@ -85,11 +104,12 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
 
         site_comps = []
         for clust in clusters:
-            comp = Composition({site.atom_type: site.occupancy for site in clust})
+            comp = Composition({site.pymatgen_species : site.occupancy for site in clust})
             site_comps.append(comp)
 
         positions = [(c[0].x, c[0].y, c[0].z) for c in clusters]
         return Structure(lattice=lattice, species=site_comps, coords=positions)
+
 
 
 def dist_from_origin(site : PeriodicSite | AtomicSite):
