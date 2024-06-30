@@ -13,11 +13,6 @@ from CrystalStructure.atomic_constants.atomic_constants import AtomicConstants
 ScatteringParams = tuple[float, float, float, float, float, float, float, float]
 #---------------------------------------------------------
 
-# Conditions:
-# - AtomicSite should be initializable with only a pymatgen species
-# - The make_void and make_placeholder classmethods should continue to work as before
-
-# ->
 
 @dataclass
 class AtomicSite(Serializable):
@@ -34,7 +29,7 @@ class AtomicSite(Serializable):
 
     @property
     def pymatgen_species(self) -> SpeciesLike:
-        return self.atom_type.specifier
+        return self.atom_type.pymatgen_type
 
     @property
     def element_symbol(self) -> str:
@@ -88,18 +83,18 @@ class AtomicSite(Serializable):
 
 class AtomType:
     void_symbol = '⊥'
-    placeholder_symbol = 'NaN'
+    placeholder_symbol = '*'
 
     def __init__(self, symbol : str):
         if symbol == self.void_symbol:
-            self.specifier : SpeciesLike = DummySpecies(symbol=self.void_symbol)
+            self.pymatgen_type : SpeciesLike = DummySpecies(symbol=self.void_symbol, oxidation_state=None)
         elif symbol == self.placeholder_symbol:
-            self.specifier : SpeciesLike = DummySpecies(symbol=self.placeholder_symbol)
+            self.pymatgen_type : SpeciesLike = DummySpecies(symbol=self.placeholder_symbol, oxidation_state=None)
         else:
-            self.specifier : SpeciesLike = Species.from_str(species_string=symbol)
+            self.pymatgen_type : SpeciesLike = Species.from_str(species_string=symbol)
 
     def get_symbol(self):
-        return str(self.specifier)
+        return str(self.pymatgen_type)
 
     @property
     def scattering_params(self) -> ScatteringParams:
@@ -111,7 +106,7 @@ class AtomType:
         else:
             # TODO: This casting only currently exists beacuse the scattering param table only has values for (unoxidized) elements, not ions
             # TODO: Normally would simply be species_symbol=str(self.species_like)
-            species_symbol = self.specifier.element.symbol
+            species_symbol = self.pymatgen_type.element.symbol
             values = AtomicConstants.get_scattering_params(species_symbol=species_symbol)
 
         (a1, b1), (a2, b2), (a3, b3), (a4, b4) = values

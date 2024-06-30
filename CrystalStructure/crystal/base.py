@@ -84,3 +84,6 @@ class CrystalBase(Serializable):
 
     def to_str(self) -> str:
         return json.dumps([site.to_str() for site in self])
+
+    def __str__(self):
+        return str([x for x in self])
