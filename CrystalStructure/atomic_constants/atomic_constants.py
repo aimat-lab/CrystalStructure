@@ -16,11 +16,6 @@ def load_constants_json(fname: str) -> dict:
 
 # ---------------------------------------------------------
 
-class UnknownSite:
-    symbol = 'NaN'
-
-class Void:
-    symbol = '⊥'
 
 
 class AtomicConstants:
@@ -40,13 +35,8 @@ class AtomicConstants:
         return cls._covalent[element_symbol]
 
     @classmethod
-    def get_scattering_params(cls, species: Union[Element,Species]) -> tuple:
-        if isinstance(species, Species):
-            symbol = str(species.element.symbol)
-        else:
-            symbol = species.symbol
-
-        return cls._scattering_params[symbol]
+    def get_scattering_params(cls, species_symbol: str) -> tuple:
+        return cls._scattering_params[species_symbol]
 
     @classmethod
     def print_all(cls):
