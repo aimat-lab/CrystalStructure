@@ -23,7 +23,8 @@ class AtomicSite(Serializable):
 
     def __post_init__(self):
         if isinstance(self.atom_type,Element):
-            raise ValueError('Element type is not allowed')
+            self.atom_type = Species(self.atom_type.symbol)
+        self.atom_type : Union[Species, Void, UnknownSite]
 
     @classmethod
     def make_void(cls) -> AtomicSite:
@@ -42,9 +43,7 @@ class AtomicSite(Serializable):
     # properties
 
     def get_symbol(self) -> str:
-        if isinstance(self.atom_type, Element):
-            return self.atom_type.symbol
-        elif isinstance(self.atom_type, Species):
+        if isinstance(self.atom_type, Species):
             return self.atom_type.element.symbol
         elif isinstance(self.atom_type, Void):
             return Void.symbol
@@ -61,7 +60,7 @@ class AtomicSite(Serializable):
     # These are *different* paramters from what you may commonly see e.g. here (https://lampz.tugraz.at/~hadley/ss1/crystaldiffraction/atomicformfactors/formfactors.php)
     # since pymatgen uses a different formula to compute the form factor
     def get_scattering_params(self) -> ScatteringParams:
-        if isinstance(self.atom_type, Species) or isinstance(self.atom_type, Element):
+        if isinstance(self.atom_type, Species):
             values = AtomicConstants.get_scattering_params(species=self.atom_type)
         elif isinstance(self.atom_type, Void):
             values = (0.0, 0.0), (0.0, 0.0), (0.0, 0.0), (0.0, 0.0)
