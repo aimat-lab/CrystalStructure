@@ -26,6 +26,10 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
 
             print(f'Composition = {actual.composition}')
 
+    def test_to_cif(self):
+        for struct, crystal in zip(self.pymatgen_structures, self.crystals):
+            cif = crystal.to_cif()
+            print(f'CIF = \n{cif}')
 
     def test_volumes(self):
         for crystal in self.crystals:

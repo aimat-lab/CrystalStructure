@@ -29,6 +29,35 @@ class CrystalStructure(JsonDataclass):
     wyckoff_symbols : Optional[list[str]] = None
     crystal_system : Optional[str] = None
 
+    @classmethod
+    def from_cif(cls, cif_content : str) -> CrystalStructure:
+        pymatgen_structure = Structure.from_str(cif_content, fmt='cif')
+        crystal_structure = cls.from_pymatgen(pymatgen_structure)
+        return crystal_structure
+
+    @classmethod
+    def from_pymatgen(cls, pymatgen_structure: Structure) -> CrystalStructure:
+        lattice = pymatgen_structure.lattice
+        base : CrystalBase = CrystalBase()
+
+        for index, site in enumerate(pymatgen_structure.sites):
+            site_composition = site.species
+            for species, occupancy in site_composition.items():
+                if isinstance(species, Element):
+                    species = Species(symbol=species.symbol, oxidation_state=0)
+                x,y,z = lattice.get_fractional_coords(site.coords)
+                atomic_site = AtomicSite(x, y, z, occupancy=occupancy, species_str=str(species))
+                base.append(atomic_site)
+
+        crystal_str = cls(lengths=Lengths(a=lattice.a, b=lattice.b, c=lattice.c),
+                          angles=Angles(alpha=lattice.alpha, beta=lattice.beta, gamma=lattice.gamma),
+                          base=base)
+
+        return crystal_str
+
+    # ---------------------------------------------------------
+    # properties
+
     def calculate_properties(self):
         pymatgen_structure = self.to_pymatgen()
         analyzer = SpacegroupAnalyzer(structure=pymatgen_structure, symprec=0.1, angle_tolerance=10)
@@ -41,7 +70,6 @@ class CrystalStructure(JsonDataclass):
 
         pymatgen_spacegroup = SpaceGroup.from_int_number(self.space_group)
         self.crystal_system = pymatgen_spacegroup.crystal_system
-
 
     def standardize(self):
         """Permutes lattice primitives such that a <= b <=c and permutes lattice sites such that i > j => d(i) > d(j) with d(i) = (x_i**2+y_i**2+z_i**2)"""
@@ -71,14 +99,11 @@ class CrystalStructure(JsonDataclass):
         new_base = sorted(new_base.atomic_sites, key=distance_from_origin)
         self.base = CrystalBase(new_base)
 
-
-    @classmethod
-    def from_cif(cls, cif_content : str) -> CrystalStructure:
-        # print(f'Cif content is {cif_content}')
-
-        pymatgen_structure = Structure.from_str(cif_content, fmt='cif')
-        crystal_structure = cls.from_pymatgen(pymatgen_structure)
-        return crystal_structure
+    def scale(self, target_density: float):
+        volume_scaling = self.packing_density / target_density
+        cbrt_scaling = volume_scaling ** (1 / 3)
+        self.lengths = self.lengths * cbrt_scaling
+        self.volume_uc = self.volume_uc * volume_scaling
 
     @property
     def packing_density(self) -> float:
@@ -86,35 +111,12 @@ class CrystalStructure(JsonDataclass):
         atomic_volume = self.base.calculate_atomic_volume()
         return atomic_volume/volume_uc
 
-    def scale(self, target_density : float):
-        volume_scaling = self.packing_density/target_density
-        cbrt_scaling = volume_scaling ** (1/3)
-        self.lengths = self.lengths * cbrt_scaling
-        self.volume_uc = self.volume_uc * volume_scaling
-
-
-    @classmethod
-    def from_pymatgen(cls, pymatgen_structure: Structure) -> CrystalStructure:
-        lattice = pymatgen_structure.lattice
-        base : CrystalBase = CrystalBase()
-
-        for index, site in enumerate(pymatgen_structure.sites):
-            site_composition = site.species
-            for species, occupancy in site_composition.items():
-                if isinstance(species, Element):
-                    species = Species(symbol=species.symbol, oxidation_state=0)
-                x,y,z = lattice.get_fractional_coords(site.coords)
-                atomic_site = AtomicSite(x, y, z, occupancy=occupancy, species_str=str(species))
-                base.append(atomic_site)
-
-        crystal_str = cls(lengths=Lengths(a=lattice.a, b=lattice.b, c=lattice.c),
-                          angles=Angles(alpha=lattice.alpha, beta=lattice.beta, gamma=lattice.gamma),
-                          base=base)
-
-        return crystal_str
-
     # ---------------------------------------------------------
-    # get
+    # conversion
+
+    def to_cif(self) -> str:
+        pymatgen_structure = self.to_pymatgen()
+        return pymatgen_structure.to(filename='', fmt='cif')
 
     def to_pymatgen(self) -> Structure:
         a, b, c = self.lengths.as_tuple()
@@ -125,9 +127,6 @@ class CrystalStructure(JsonDataclass):
         atoms = [site.atom_type.specifier for site in non_void_sites]
         positions = [(site.x, site.y, site.z) for site in non_void_sites]
         return Structure(lattice, atoms, positions)
-
-    # ---------------------------------------------------------
-    # print
 
     def as_str(self) -> str:
         the_dict = asdict(self)
