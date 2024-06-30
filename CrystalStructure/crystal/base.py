@@ -36,17 +36,6 @@ class CrystalBase(Serializable):
     def get_non_void_sites(self) -> list[AtomicSite]:
         return [site for site in self if not site.is_nonstandard()]
 
-    def as_site_dictionaries(self) -> dict:
-        coordinate_map = {}
-        for atom_site in self:
-            coords = (atom_site.x, atom_site.y, atom_site.z)
-            if not coords in coordinate_map:
-                coordinate_map[coords] = {}
-            coordinate_map[coords][atom_site.atom_type] = atom_site.occupancy
-
-        print(f'Coordinate map = {coordinate_map}')
-        return coordinate_map
-
     def is_empty(self) -> bool:
         return len(self) == 0
 
