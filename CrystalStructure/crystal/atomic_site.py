@@ -26,11 +26,11 @@ class AtomicSite(Serializable):
     y: Optional[float]
     z: Optional[float]
     occupancy : Optional[float]
-    species_symbol : str
+    species_str : str
     wyckoff_letter : Optional[str] = None
 
     def __post_init__(self):
-        self.atom_type : AtomType = AtomType(symbol=self.species_symbol)
+        self.atom_type : AtomType = AtomType(symbol=self.species_str)
 
     @property
     def pymatgen_species(self) -> SpeciesLike:
@@ -42,14 +42,14 @@ class AtomicSite(Serializable):
 
     @classmethod
     def make_void(cls) -> AtomicSite:
-        return cls(x=None, y=None, z=None, occupancy=0.0, species_symbol=AtomType.void_symbol)
+        return cls(x=None, y=None, z=None, occupancy=0.0, species_str=AtomType.void_symbol)
 
     @classmethod
     def make_placeholder(cls):
-        return cls(x=None, y=None, z=None, occupancy=None, species_symbol=AtomType.placeholder_symbol)
+        return cls(x=None, y=None, z=None, occupancy=None, species_str=AtomType.placeholder_symbol)
 
     def is_nonstandard(self) -> bool:
-        if self.species_symbol == AtomType.void_symbol or self.species_symbol == AtomType.placeholder_symbol:
+        if self.species_str == AtomType.void_symbol or self.species_str == AtomType.placeholder_symbol:
             return True
         return False
 
@@ -71,7 +71,7 @@ class AtomicSite(Serializable):
 
     def to_str(self) -> str:
         the_dict = {'x': self.x, 'y': self.y, 'z': self.z, 'occupancy': self.occupancy,
-                    'symbol': self.species_symbol,
+                    'symbol': self.species_str,
                     'wyckoff_letter': self.wyckoff_letter}
 
         return json.dumps(the_dict)
@@ -82,7 +82,7 @@ class AtomicSite(Serializable):
 
         return cls(x=the_dict['x'], y=the_dict['y'], z=the_dict['z'],
                    occupancy=the_dict['occupancy'],
-                   species_symbol=the_dict['symbol'],
+                   species_str=the_dict['symbol'],
                    wyckoff_letter=the_dict['wyckoff_letter'])
 
 
@@ -93,7 +93,7 @@ class AtomType:
     def __init__(self, symbol : str):
         if symbol == self.void_symbol:
             self.specifier : SpeciesLike = DummySpecies(symbol=self.void_symbol)
-        if symbol == self.placeholder_symbol:
+        elif symbol == self.placeholder_symbol:
             self.specifier : SpeciesLike = DummySpecies(symbol=self.placeholder_symbol)
         else:
             self.specifier : SpeciesLike = Species.from_str(species_string=symbol)

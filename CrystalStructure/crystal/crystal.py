@@ -59,7 +59,7 @@ class CrystalStructure(JsonDataclass):
         new_base = CrystalBase()
         for site in self.base:
             x,y,z = apply_permutation([site.x, site.y, site.z], sort_permutation)
-            new_site = AtomicSite(x=x, y=y, z=z, occupancy=site.occupancy, species_symbol=site.species_symbol)
+            new_site = AtomicSite(x=x, y=y, z=z, occupancy=site.occupancy, species_str=site.species_str)
             new_base.append(new_site)
 
 
@@ -104,7 +104,7 @@ class CrystalStructure(JsonDataclass):
                 if isinstance(species, Element):
                     species = Species(symbol=species.symbol, oxidation_state=0)
                 x,y,z = lattice.get_fractional_coords(site.coords)
-                atomic_site = AtomicSite(x, y, z, occupancy=occupancy, species_symbol=str(species))
+                atomic_site = AtomicSite(x, y, z, occupancy=occupancy, species_str=str(species))
                 base.append(atomic_site)
 
         crystal_str = cls(lengths=Lengths(a=lattice.a, b=lattice.b, c=lattice.c),
