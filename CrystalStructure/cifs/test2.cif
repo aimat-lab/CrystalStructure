@@ -1,22 +1,4 @@
 data_2
-loop_
-_publ_author_name
-'Amin, A.'
-'Newnham, R. E.'
-'Cross, L. E.'
-'Cox, D. E.'
-_publ_section_title
-;
- Phenomenological and structural study of a low-temperature phase
- transition in the Pb Zr O3 - Pb Ti O3 system
-;
-_journal_coden_ASTM              JSSCBI
-_journal_name_full               'Journal of Solid State Chemistry'
-_journal_page_first              248
-_journal_page_last               255
-_journal_paper_doi               10.1016/0022-4596(81)90091-8
-_journal_volume                  37
-_journal_year                    1981
 _chemical_formula_structural     'Pb (Zr0.6 Ti0.4) O3'
 _chemical_formula_sum            'O3 Pb Ti0.4 Zr0.6'
 _space_group_IT_number           160
@@ -60,14 +42,7 @@ _atom_site_fract_z
 _atom_site_occupancy
 _atom_site_attached_hydrogens
 _atom_site_B_iso_or_equiv
-Pb1 Pb2+ 1 a 0.5620(8) 0.562 0.562 1. 0 1.9(1)
-Zr1 Zr4+ 1 a 0.0216(14) 0.0216 0.0216 0.6 0 1.10(17)
-Ti1 Ti4+ 1 a 0.0216(14) 0.0216 0.0216 0.4 0 1.10(17)
-O1 O2- 3 b -.0046(2) 0.5092(4) -.0046(2) 1. 0 1.57(7)
-loop_
-_atom_type_symbol
-_atom_type_oxidation_number
-O2- -2
-Pb2+ 2
-Ti4+ 4
-Zr4+ 4
+Pb1 Pb 1 a 0.5620(8) 0.562 0.562 1. 0 1.9(1)
+Zr1 Zr 1 a 0.0216(14) 0.0216 0.0216 0.6 0 1.10(17)
+Ti1 Ti 1 a 0.0216(14) 0.0216 0.0216 0.4 0 1.10(17)
+O1 O 3 b -.0046(2) 0.5092(4) -.0046(2) 1. 0 1.57(7)

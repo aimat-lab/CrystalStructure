@@ -21,6 +21,10 @@ class AtomicSite(Serializable):
     atom_type : Union[Element,Species, Void, UnknownSite]
     wyckoff_letter : Optional[str] = None
 
+    def __post_init__(self):
+        if isinstance(self.atom_type,Element):
+            raise ValueError('Element type is not allowed')
+
     @classmethod
     def make_void(cls) -> AtomicSite:
         return cls(x=None, y=None, z=None, occupancy=0.0, atom_type=Void())
