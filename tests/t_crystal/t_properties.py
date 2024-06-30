@@ -1,15 +1,18 @@
 import math
 
-from pymatgen.core import Site
+import numpy as np
+from pymatgen.core import Lattice, Structure, Composition, PeriodicSite
 
 import tests.t_crystal.crystal_test as BaseTest
+from CrystalStructure.crystal import AtomicSite, CrystalStructure
+
 
 # ---------------------------------------------------------
 
 class TestPropertyCalculation(BaseTest.CrystalTest):
     def test_pymatgen(self):
         for struct, crystal in zip(self.pymatgen_structures, self.crystals):
-            actual = crystal.to_pymatgen()
+            actual = self.to_clustered_pymatgen(crystal)
             expected = struct
 
             self.assertEqual(actual.lattice, expected.lattice)
@@ -17,8 +20,8 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
             print(f'Actual sites = {actual.sites}; Expected sites = {expected.sites}')
             self.assertEqual(len(actual.sites), len(expected.sites))
 
-            actual_sites = sorted(actual.sites, key=self.euclidean_distance)
-            expected_sites = sorted(expected.sites, key=self.euclidean_distance)
+            actual_sites = sorted(actual.sites, key=dist_from_origin)
+            expected_sites = sorted(expected.sites, key=dist_from_origin)
             for s1,s2 in zip(actual_sites, expected_sites):
                 self.assertEqual(s1,s2)
 
@@ -49,15 +52,51 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
 
         expected_symbols = [
             ['d', 'd', 'd', 'd', 'd', 'd', 'd', 'd', 'c', 'c', 'c', 'c', 'd', 'd', 'd', 'd'],
-            ['a','a','b','b','b']
+            ['a','a','a','b','b','b']
         ]
         for crystal, symbols_exp in zip(self.crystals, expected_symbols):
             self.assertEqual(crystal.wyckoff_symbols, symbols_exp)
 
-    @staticmethod
-    def euclidean_distance(site : Site):
-        return math.sqrt(site.x ** 2 + site.y ** 2 + site.z ** 2)
+    # ---------------------------------------------------------
 
+    @staticmethod
+    def to_clustered_pymatgen(crystal : CrystalStructure) -> Structure:
+        a, b, c = crystal.lengths.as_tuple()
+        alpha, beta, gamma = crystal.angles.as_tuple()
+        lattice = Lattice.from_parameters(a, b, c, alpha, beta, gamma)
+
+        non_void_sites = crystal.base.get_non_void_sites()
+
+        EPSILON = 0.001
+        clusters: list[list[AtomicSite]] = []
+
+        def matching_cluster(the_site):
+            for cl in clusters:
+                if euclidean_dist(cl[0], the_site) < EPSILON:
+                    return cl
+            return None
+
+        for site in non_void_sites:
+            match = matching_cluster(site)
+            if match:
+                match.append(site)
+            else:
+                clusters.append([site])
+
+        site_comps = []
+        for clust in clusters:
+            comp = Composition({site.atom_type: site.occupancy for site in clust})
+            site_comps.append(comp)
+
+        positions = [(c[0].x, c[0].y, c[0].z) for c in clusters]
+        return Structure(lattice=lattice, species=site_comps, coords=positions)
+
+
+def dist_from_origin(site : PeriodicSite | AtomicSite):
+    return math.sqrt(site.x ** 2 + site.y ** 2 + site.z ** 2)
+
+def euclidean_dist(siteA : PeriodicSite | AtomicSite, siteB: PeriodicSite | AtomicSite):
+    return np.sqrt((siteA.x - siteB.x) ** 2 + (siteA.y - siteB.y) ** 2 + (siteA.z - siteB.z) ** 2)
 
 if __name__ == '__main__':
     TestPropertyCalculation.execute_all()
