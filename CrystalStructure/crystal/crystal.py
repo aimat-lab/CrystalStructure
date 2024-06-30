@@ -68,7 +68,7 @@ class CrystalStructure(JsonDataclass):
             cartesian_coords = new_lattice.get_fractional_coords(coords)
             return np.sum(cartesian_coords**2)
 
-        new_base = sorted(new_base, key=distance_from_origin)
+        new_base = sorted(new_base.atomic_sites, key=distance_from_origin)
         self.base = CrystalBase(new_base)
 
 

@@ -1,17 +1,15 @@
-import math
-
 from holytools.devtools import Unittest
 from pymatgen.core import Structure
 
-from CrystalStructure.atomic_constants.atomic_constants import Void
-from CrystalStructure.crystal import CrystalStructure, AtomicSite
+from CrystalStructure.crystal import CrystalStructure
 from CrystalStructure.examples import CrystalExamples
+
 
 # ---------------------------------------------------------
 
 class CrystalTest(Unittest):
     def setUp(self):
-        self.cifs : list[str] =  [CrystalExamples.get_cif_content(), CrystalExamples.get_cif_content(secondary=True)]
+        self.cifs : list[str] = [CrystalExamples.get_cif_content(j) for j in range(1, 4)]
 
         self.pymatgen_structures : list[Structure] = [Structure.from_str(cif, fmt='cif') for cif in self.cifs]
         self.crystals : list[CrystalStructure] = [CrystalStructure.from_cif(cif_content=cif) for cif in self.cifs]

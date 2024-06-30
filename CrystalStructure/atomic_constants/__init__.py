@@ -1,1 +1,1 @@
-from .atomic_constants import ElementSymbol, AtomicConstants
+from .atomic_constants import AtomicConstants

@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import math
 import json
-from typing import Optional
+from typing import Optional, Iterable
 
 from holytools.abstract import Serializable
 
-from CrystalStructure.atomic_constants import ElementSymbol, AtomicConstants
+from CrystalStructure.atomic_constants import AtomicConstants
 from .atomic_site import AtomicSite
 
 
@@ -23,7 +23,7 @@ class CrystalBase(Serializable):
     def calculate_atomic_volume(self) -> float:
         total_atomic_volume = 0
         for site in self.get_non_void_sites():
-            element_symbol : ElementSymbol = site.get_symbol()
+            element_symbol : str = site.get_symbol()
             covalent_radius  = AtomicConstants.get_covalent(element_symbol=element_symbol)
             vdw_radius = AtomicConstants.get_vdw_radius(element_symbol=element_symbol)
 
