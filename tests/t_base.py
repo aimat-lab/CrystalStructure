@@ -1,10 +1,9 @@
-from CrystalStructure.crystal.atomic_site import AtomType
+from holytools.devtools import Unittest
 
 from CrystalStructure.crystal import CrystalBase, AtomicSite
-from holytools.devtools import Unittest
-from pymatgen.core import Species
-
+from CrystalStructure.crystal.atomic_site import AtomType
 from CrystalStructure.examples import CrystalExamples
+
 
 # ---------------------------------------------------------
 

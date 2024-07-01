@@ -131,7 +131,7 @@ class CrystalStructure(JsonDataclass):
     def as_str(self) -> str:
         the_dict = asdict(self)
         the_dict = {str(key) : str(value) for key, value in the_dict.items() if not isinstance(value, Structure)}
-        the_dict['atoms'] = f'{self.base[0]}, ...'
+        the_dict['base'] = f'{self.base[0]}, ...'
         return json.dumps(the_dict, indent='-')
 
     def __str__(self):
