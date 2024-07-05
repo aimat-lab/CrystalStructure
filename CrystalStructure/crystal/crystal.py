@@ -87,7 +87,7 @@ class CrystalStructure(JsonDataclass):
         new_base = CrystalBase()
         for site in self.base:
             x,y,z = apply_permutation([site.x, site.y, site.z], sort_permutation)
-            new_site = AtomicSite(x=x, y=y, z=z, occupancy=site.occupancy, species_str=site.species_str)
+            new_site = AtomicSite(x=x, y=y, z=z, occupancy=site.occupancy, species_str=site.species_str, wyckoff_letter=site.wyckoff_letter)
             new_base.append(new_site)
 
 
