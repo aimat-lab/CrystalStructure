@@ -22,7 +22,7 @@ class CrystalStructure(JsonDataclass):
     lengths : Lengths
     angles : Angles
     base : CrystalBase
-    space_group : Optional[int] = None
+    spacegroup : Optional[int] = None
     volume_uc : Optional[float] = None
     atomic_volume: Optional[float] = None
     num_atoms : Optional[int] = None
@@ -61,14 +61,14 @@ class CrystalStructure(JsonDataclass):
     def calculate_properties(self):
         pymatgen_structure = self.to_pymatgen()
         analyzer = SpacegroupAnalyzer(structure=pymatgen_structure, symprec=0.1, angle_tolerance=10)
-        self.space_group = analyzer.get_space_group_number()
+        self.spacegroup = analyzer.get_space_group_number()
         self.volume_uc = pymatgen_structure.volume
 
         symmetry_dataset = analyzer.get_symmetry_dataset()
         self.wyckoff_symbols = symmetry_dataset['wyckoffs']
         self.num_atoms = len(self.wyckoff_symbols)
 
-        pymatgen_spacegroup = SpaceGroup.from_int_number(self.space_group)
+        pymatgen_spacegroup = SpaceGroup.from_int_number(self.spacegroup)
         self.crystal_system = pymatgen_spacegroup.crystal_system
 
     def standardize(self):

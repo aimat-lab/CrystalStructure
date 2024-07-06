@@ -47,7 +47,7 @@ class TestPropertyCalculation(BaseTest.CrystalTest):
             crystal.calculate_properties()
 
         for crystal, space_group_exp in zip(self.crystals, self.spgs):
-            self.assertEqual(crystal.space_group, space_group_exp)
+            self.assertEqual(crystal.spacegroup, space_group_exp)
 
         expected_systems = ['orthorhombic', 'trigonal']
         for crystal, system_exp in zip(self.crystals, expected_systems):
