@@ -86,21 +86,19 @@ class AtomType:
     placeholder_symbol = '*'
 
     def __init__(self, symbol : str):
-        if symbol == self.void_symbol:
-            self.pymatgen_type : SpeciesLike = DummySpecies(symbol=self.void_symbol, oxidation_state=None)
-        elif symbol == self.placeholder_symbol:
-            self.pymatgen_type : SpeciesLike = DummySpecies(symbol=self.placeholder_symbol, oxidation_state=None)
-        else:
-            self.pymatgen_type : SpeciesLike = Species.from_str(species_string=symbol)
+        self.symbol : str = symbol
 
-    def get_symbol(self):
-        return str(self.pymatgen_type)
+    @property
+    def pymatgen_type(self) -> Optional[Species]:
+        is_standard = not self.symbol in [self.void_symbol, self.placeholder_symbol]
+        pymatgen_type = Species.from_str(species_string=self.symbol) if is_standard else None
+        return pymatgen_type
 
     @property
     def scattering_params(self) -> ScatteringParams:
-        if self.get_symbol() == self.void_symbol:
+        if self.symbol == self.void_symbol:
             values = (0.0, 0.0), (0.0, 0.0), (0.0, 0.0), (0.0, 0.0)
-        elif self.get_symbol() == self.placeholder_symbol:
+        elif self.symbol == self.placeholder_symbol:
             fnan = float('nan')
             values = (fnan, fnan), (fnan, fnan), (fnan, fnan), (fnan, fnan)
         else:
