@@ -80,7 +80,6 @@ class CrystalStructure(JsonDataclass):
         lattice = Lattice.from_parameters(a,b,c, alpha, beta, gamma).matrix
         new_lattice = Lattice(apply_permutation(lattice, permutation=sort_permutation))
 
-
         self.lengths = Lengths(new_lattice.a, new_lattice.b, new_lattice.c)
         self.angles = Angles(new_lattice.alpha, new_lattice.beta, new_lattice.gamma)
 

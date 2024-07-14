@@ -4,11 +4,11 @@ import json
 from dataclasses import dataclass
 from typing import Optional
 
-from holytools.abstract import Serializable
-from pymatgen.core import Species, DummySpecies
+from pymatgen.core import Species
 from pymatgen.util.typing import SpeciesLike
 
 from CrystalStructure.atomic_constants.atomic_constants import AtomicConstants
+from holytools.abstract import Serializable
 
 ScatteringParams = tuple[float, float, float, float, float, float, float, float]
 #---------------------------------------------------------
