@@ -10,10 +10,12 @@ from pymatgen.core import Structure, Lattice, Species, Element
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatgen.symmetry.groups import SpaceGroup
 
+from holytools.logging import LoggerFactory
 from .atomic_site import AtomicSite
 from .base import CrystalBase
 from .lattice import Angles, Lengths
 
+logger = LoggerFactory.get_logger(name=__name__)
 CrystalSystem = Literal["cubic", "hexagonal", "monoclinic", "orthorhombic", "tetragonal", "triclinic", "trigonal"]
 # ---------------------------------------------------------
 
@@ -59,14 +61,18 @@ class CrystalStructure(JsonDataclass):
     # properties
 
     def calculate_properties(self):
+        if len(self.base) == 0:
+            logger.error(msg=f'Base is empty! Cannot calculate properties of empty crystal. Aborting ...')
+            return
+
         pymatgen_structure = self.to_pymatgen()
+        self.volume_uc = pymatgen_structure.volume
         analyzer = SpacegroupAnalyzer(structure=pymatgen_structure, symprec=0.1, angle_tolerance=10)
         self.spacegroup = analyzer.get_space_group_number()
-        self.volume_uc = pymatgen_structure.volume
+        self.num_atoms = len(self.base)
 
         symmetry_dataset = analyzer.get_symmetry_dataset()
         self.wyckoff_symbols = symmetry_dataset['wyckoffs']
-        self.num_atoms = len(self.wyckoff_symbols)
 
         pymatgen_spacegroup = SpaceGroup.from_int_number(self.spacegroup)
         self.crystal_system = pymatgen_spacegroup.crystal_system
@@ -125,6 +131,10 @@ class CrystalStructure(JsonDataclass):
         non_void_sites = self.base.get_non_void_sites()
         atoms = [site.atom_type.pymatgen_type for site in non_void_sites]
         positions = [(site.x, site.y, site.z) for site in non_void_sites]
+
+        if len(atoms) == 0:
+            logger.warning('Structure has no atoms!')
+
         return Structure(lattice, atoms, positions)
 
     def as_str(self) -> str:
