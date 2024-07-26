@@ -27,7 +27,6 @@ class CrystalStructure(JsonDataclass):
     spacegroup : Optional[int] = None
     volume_uc : Optional[float] = None
     atomic_volume: Optional[float] = None
-    num_atoms : Optional[int] = None
     wyckoff_symbols : Optional[list[str]] = None
     crystal_system : Optional[str] = None
 
@@ -69,7 +68,6 @@ class CrystalStructure(JsonDataclass):
         self.volume_uc = pymatgen_structure.volume
         analyzer = SpacegroupAnalyzer(structure=pymatgen_structure, symprec=0.1, angle_tolerance=10)
         self.spacegroup = analyzer.get_space_group_number()
-        self.num_atoms = len(self.base)
 
         symmetry_dataset = analyzer.get_symmetry_dataset()
         self.wyckoff_symbols = symmetry_dataset['wyckoffs']
@@ -115,6 +113,10 @@ class CrystalStructure(JsonDataclass):
         volume_uc = self.volume_uc
         atomic_volume = self.base.calculate_atomic_volume()
         return atomic_volume/volume_uc
+
+    @property
+    def num_atoms(self) -> int:
+        return len(self.base)
 
     # ---------------------------------------------------------
     # conversion
