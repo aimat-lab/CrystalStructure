@@ -75,33 +75,6 @@ class CrystalStructure(JsonDataclass):
         pymatgen_spacegroup = SpaceGroup.from_int_number(self.spacegroup)
         self.crystal_system = pymatgen_spacegroup.crystal_system
 
-    def standardize(self):
-        """Permutes lattice primitives such that a <= b <=c and permutes lattice sites such that i > j => d(i) > d(j) with d(i) = (x_i**2+y_i**2+z_i**2)"""
-        a,b,c = self.lengths
-        alpha, beta, gamma = self.angles
-        sort_permutation = get_sorting_permutation(a,b,c)
-
-        lattice = Lattice.from_parameters(a,b,c, alpha, beta, gamma).matrix
-        new_lattice = Lattice(apply_permutation(lattice, permutation=sort_permutation))
-
-        self.lengths = Lengths(new_lattice.a, new_lattice.b, new_lattice.c)
-        self.angles = Angles(new_lattice.alpha, new_lattice.beta, new_lattice.gamma)
-
-        new_base = CrystalBase()
-        for site in self.base:
-            x,y,z = apply_permutation([site.x, site.y, site.z], sort_permutation)
-            new_site = AtomicSite(x=x, y=y, z=z, occupancy=site.occupancy, species_str=site.species_str, wyckoff_letter=site.wyckoff_letter)
-            new_base.append(new_site)
-
-
-        def distance_from_origin(atomic_site : AtomicSite):
-            coords = np.array([atomic_site.x, atomic_site.y, atomic_site.z])
-            cartesian_coords = new_lattice.get_fractional_coords(coords)
-            return np.sum(cartesian_coords**2)
-
-        new_base = sorted(new_base.atomic_sites, key=distance_from_origin)
-        self.base = CrystalBase(new_base)
-
     def scale(self, target_density: float):
         volume_scaling = self.packing_density / target_density
         cbrt_scaling = volume_scaling ** (1 / 3)
