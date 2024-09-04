@@ -75,6 +75,12 @@ class CrystalStructure(JsonDataclass):
         pymatgen_spacegroup = SpaceGroup.from_int_number(self.spacegroup)
         self.crystal_system = pymatgen_spacegroup.crystal_system
 
+
+    def get_standardized(self) -> CrystalStructure:
+        analzyer = SpacegroupAnalyzer(self.to_pymatgen())
+        standardized_pymatgen = analzyer.get_conventional_standard_structure()
+        return CrystalStructure.from_pymatgen(pymatgen_structure=standardized_pymatgen)
+
     def scale(self, target_density: float):
         volume_scaling = self.packing_density / target_density
         cbrt_scaling = volume_scaling ** (1 / 3)
@@ -90,6 +96,7 @@ class CrystalStructure(JsonDataclass):
     @property
     def num_atoms(self) -> int:
         return len(self.base)
+
 
     # ---------------------------------------------------------
     # conversion
@@ -120,16 +127,4 @@ class CrystalStructure(JsonDataclass):
 
     def __str__(self):
         return self.as_str()
-
-
-
-def get_sorting_permutation(a, b, c):
-    original = [a, b, c]
-    sorted_with_indices = sorted(enumerate(original), key=lambda x: x[1])
-    permutation = [x[0] for x in sorted_with_indices]
-    return permutation
-
-
-def apply_permutation(original_list, permutation):
-    return [original_list[i] for i in permutation]
 
